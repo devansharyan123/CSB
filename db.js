@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const { number } = require('zod');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
-require('dotenv').config();
 
-mongoose.connect(process.env.MONGO_URI);
+
+
 
 
 const userSchema = new Schema({
