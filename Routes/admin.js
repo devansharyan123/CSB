@@ -16,21 +16,21 @@ adminRouter.post('/signup', function (req, res) {
 
 })
 
-adminRouter.get('/course/bulk', function (req, res) {
+adminRouter.get('/bulk', function (req, res) {
     res.json({
         message: "SIGN UP"
     })
 
 })
 
-adminRouter.post('/course', function (req, res) {
+adminRouter.post('/', function (req, res) {
     res.json({
         message: "SIGN UP"
     })
 
 })
 
-adminRouter.put('/course', function (req, res) {
+adminRouter.put('/', function (req, res) {
     res.json({
         message: "SIGN UP"
     })
