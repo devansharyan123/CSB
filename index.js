@@ -5,12 +5,17 @@ const {courseRouter} = require('./Routes/course');
 const {adminRouter}  = require('./Routes/admin');
 require('dotenv').config();
 const mongoose = require('mongoose');
+app.use(express.json())
+
+
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/course", courseRouter);
+app.use("/api/v1/admin",adminRouter);
+
+   
 
 
 
-app.use("/user", userRouter);
-app.use("/course", courseRouter);
-app.use("/admin",adminRouter);
 
 
 async function main(){

@@ -1,16 +1,61 @@
 const { Router } = require('express');
 const userRouter = Router();
+const { userModel } = require('../db');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const jwt_secretKey = process.env.jwt_secret_user;
 
-userRouter.post('/login', function (req, res) {
-    res.json({
-        message: "SIGN IN"
-    })
+userRouter.post('/signup', async function (req, res) {
+
+    const { email, password, firstName, lastName } = req.body;
+    //hash password
+    //use zod for input classification
+
+    try {
+        //console.log("reached here \n");
+        await userModel.create({
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName
+        })
+
+        res.json({
+            message: "SIGNed IN"
+        })
+    }
+    catch (e) {
+        res.json({
+            message: "sign in error"
+        })
+    }
+
+
+
 })
 
-userRouter.post('/signup', function (req, res) {
-    res.json({
-        message: "SIGN UP"
+userRouter.post('/signin', async function (req, res) {
+
+    const { email, password } = req.body;
+    const user = await userModel.findOne({
+        email: email,
+        password: password
     })
+
+    //cookie or session based logic here 
+    if (user) {
+        const token = jwt.sign({
+            id: user._id
+        }, jwt_secretKey)
+
+        res.json({
+            message: token
+        })
+    }
+    else {
+        res.json("id not found")
+    }
+
 
 })
 
