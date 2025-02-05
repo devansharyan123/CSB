@@ -2,10 +2,11 @@ const { Router } = require('express');
 const userRouter = Router();
 const { userModel } = require('../db');
 const jwt = require('jsonwebtoken');
+const userMiddleware = require('../middleware/userMiddleware');
 require('dotenv').config();
 const jwt_secretKey = process.env.jwt_secret_user;
 
-userRouter.post('/signup', async function (req, res) {
+userRouter.post('/signup',userMiddleware , async function (req, res) {
 
     const { email, password, firstName, lastName } = req.body;
     //hash password
