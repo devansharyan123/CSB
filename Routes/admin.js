@@ -2,7 +2,7 @@ const { Router } = require('express');
 const adminRouter = Router();
 const { adminModel, courseModel } = require("../db");
 const jwt = require('jsonwebtoken');
-const adminMiddleware = require('../middleware/adminMiddleware');
+const {adminMiddleware} = require('../middleware/adminMiddleware');
 const course = require('./course');
 require('dotenv').config();
 const jwt_secretKey = process.env.jwt_secret_admin;
@@ -64,7 +64,7 @@ adminRouter.get('/course/bulk',adminMiddleware, async function (req, res) {
     })
     res.json({
         message: "Course updated",
-        courseId : course._id
+        course
     })
 
 })
@@ -96,20 +96,26 @@ adminRouter.put('/course', adminMiddleware , async function (req, res) {
     const adminId = req.adminId;
 
     const {title , description , imageUrl, price , courseId} = req.body
-
+try{
     const course = await courseModel.updateOne({
         _id : courseId,
         creatorId : adminId
     } ,{
-        title,
-        description,
-        price,
-        imageUrl
+        title : title,
+        description : description,
+        price : price,
+        imageUrl : imageUrl
     })
     res.json({
         message: "Course updated",
         courseId : course._id
     })
+} catch(e){
+    res.status(403).json({
+        message : " There is an error in updating"
+    })
+}
+    
 
 })
 

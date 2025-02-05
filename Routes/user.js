@@ -1,12 +1,14 @@
 const { Router } = require('express');
 const userRouter = Router();
-const { userModel } = require('../db');
+const { userModel , courseModel } = require('../db');
 const jwt = require('jsonwebtoken');
-const userMiddleware = require('../middleware/userMiddleware');
-require('dotenv').config();
-const jwt_secretKey = process.env.jwt_secret_user;
 
-userRouter.post('/signup',userMiddleware , async function (req, res) {
+const {userMiddleware} = require('../middleware/userMiddleware');
+const { $in } = require('sift');
+require('dotenv').config();
+const jwt_secretKey = process.env.jwt_secret;
+
+userRouter.post('/signup', async function (req, res) {
 
     const { email, password, firstName, lastName } = req.body;
     //hash password
@@ -35,7 +37,7 @@ userRouter.post('/signup',userMiddleware , async function (req, res) {
 
 })
 
-userRouter.post('/signin', async function (req, res) {
+userRouter.post('/signin',userMiddleware, async function (req, res) {
 
     const { email, password } = req.body;
     const user = await userModel.findOne({
@@ -60,9 +62,18 @@ userRouter.post('/signin', async function (req, res) {
 
 })
 
-userRouter.get('/purchases', function (req, res) {
+userRouter.get('/purchases',userMiddleware, async function (req, res) {
+    const userId = req.userId;
+    const courses = await purchaseModel.find({
+        userId
+    })  
+
+    const purchases = await courseModel.find({
+        _id : {$in : courses.map(x => x.courseId)}
+    })
     res.json({
-        message: "PURCHASES"
+       courses,
+       purchases
     })
 })
 
